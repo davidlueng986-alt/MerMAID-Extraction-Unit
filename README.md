@@ -50,3 +50,9 @@ Early prototype stage. Firmware for the water module is functional; soil and UV 
 ---
 
 *Originally developed as MercurSense hardware. Renamed and continued as MerMAID Extraction Unit for iGEM.*
+
+## License
+
+This project is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0).
+
+You are free to share and adapt the material for any purpose, provided you give appropriate credit to the MerMAID Extraction Unit / iGEM contributors.

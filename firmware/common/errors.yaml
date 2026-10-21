@@ -1,0 +1,26 @@
+# Single source of truth for error / event codes.
+#   python3 tools/gen_errors.py   ->  firmware/common/error_codes.h  and  docs/manual/error_codes.md
+# id        : numeric value used in firmware (stable, never reuse)
+# code      : label printed in E / S log lines and shown in the manual
+# module    : WM / SM / UV / ALL
+# situation : what happened       action : what the machine and the user do
+# source    : where the requirement comes from
+# status    : 'plan' = defined in the module plan;  'proposed' = added for the firmware, not yet in any plan
+errors:
+  - {id: 1,  code: E-ABORT, module: ALL, situation: User aborted the run,                          action: All outputs off; enter the error state; a key press acknowledges and returns to idle, source: C-S06, status: plan}
+  - {id: 2,  code: E-WDT,   module: ALL, situation: Watchdog restart (program hung),               action: All outputs off; return to self-test; never resumes a run automatically, source: C-S02, status: plan}
+  - {id: 3,  code: E-SCALE, module: ALL, situation: Scale gave no new reading for 0.5 s; reading saturated or unstable, action: Stop dosing immediately; enter the error state, source: C-S04, status: plan}
+  - {id: 10, code: E-WM1,   module: WM,  situation: Pump ran longer than t_run + 30 s,             action: Force the pump off; enter the error state; acknowledge with a key press, source: C-S03 / WM-R07, status: proposed}
+  - {id: 21, code: E1,      module: SM,  situation: Soil mass outside 2.0-3.0 g,                   action: Ask the user to add or remove soil; do not start dosing, source: Soil plan 5.2 / SM-R03, status: plan}
+  - {id: 22, code: E2,      module: SM,  situation: Stirring speed too low or no encoder signal,   action: Stop; ask the user to check the impeller, source: Soil plan 5.2 / SM-R05, status: plan}
+  - {id: 23, code: E3,      module: SM,  situation: Dosing timeout or overdose (> +5%),            action: Stop the pump; mark the sample invalid, source: Soil plan 5.2 / SM-R04, status: plan}
+  - {id: 24, code: E4,      module: SM,  situation: Reservoir bottle low,                           action: Refuse to start, source: Soil plan 5.2 / SM-R10, status: plan}
+  - {id: 25, code: E5,      module: SM,  situation: Scale reading unstable or drifting,            action: Re-zero and retry once; stop if it fails again, source: Soil plan 5.2 / SM-R11, status: plan}
+  - {id: 26, code: E6,      module: SM,  situation: Supernatant not pulled in time after READY,    action: Keep settling; beep every minute; record the actual contact time in the metadata, source: Soil plan 5.2 / SM-R07, status: plan}
+  - {id: 27, code: E7,      module: SM,  situation: Pulled mass lower than expected (placeholder < 10 g), action: Flag it; ask the user to check the water module for a blocked filter or leak, source: Soil plan 5.2 / SM-R08, status: plan}
+  - {id: 41, code: E-UV1,   module: UV,  situation: Door not closed or interlock failure,           action: Do not irradiate; ask the user to close the door, source: UV plan 6.2 / UV-R06, status: plan}
+  - {id: 42, code: E-UV2,   module: UV,  situation: Tube wall or heat-sink ring temperature out of range, action: Stop irradiation; cool and retry once; stop the run if it happens again, source: UV plan 6.2 / UV-R08, status: plan}
+  - {id: 43, code: E-UV3,   module: UV,  situation: Light intensity below half of the baseline,     action: Finish the run but flag "dose too low"; ask the user to check the LEDs and quartz tube, source: UV plan 6.2 / UV-R09, status: plan}
+  - {id: 44, code: E-UV4,   module: UV,  situation: Reagent low or quartz tube not in place,       action: Refuse to start, source: UV plan 6.2 / UV-R02, status: plan}
+  - {id: 45, code: E-UV5,   module: UV,  situation: Filtrate mass outside 8-12 g,                  action: Do not start; ask the user to check the water module (timing or blocked filter), source: UV plan 6.2 / UV-R03, status: plan}
+  - {id: 46, code: E-UV6,   module: UV,  situation: Dosing timeout or overdose,                    action: Mark the sample invalid, source: UV plan 6.2 / UV-R05, status: plan}
